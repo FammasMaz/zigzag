@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 90
     env:
       # Unsigned: the runner has no Apple Development identity. The in-memory vault keeps tests out of the keychain.
@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Toolchain
         run: |
-          sudo xcode-select -s /Applications/Xcode_26.app || ls /Applications | grep -i xcode
+          sudo xcode-select -s /Applications/Xcode_27.2.app || sudo xcode-select -s /Applications/Xcode_27.1.app || ls /Applications | grep -i xcode
           xcodebuild -version
           sw_vers
           brew install xcodegen

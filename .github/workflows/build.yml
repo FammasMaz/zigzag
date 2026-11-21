@@ -10,7 +10,11 @@ on:
         description: Build configuration
         default: Debug
         type: choice
-        options: [Debug, Release, ReleaseDebug]
+        options: [Debug, Release]
+      extra:
+        description: Extra xcodebuild settings, e.g. SWIFT_ACTIVE_COMPILATION_CONDITIONS=DEBUG
+        default: ''
+        type: string
 
 jobs:
   build:
@@ -30,17 +34,7 @@ jobs:
           sw_vers
           brew install xcodegen
       - name: Generate project
-        run: |
-          if [ "$CONFIG" = ReleaseDebug ]; then
-            # Release optimisation with the DEBUG compile paths (DebugBridge, scrollbench) for unattended bisecting.
-            python3 - <<'EOF'
-          import re
-          s=open('project.yml').read()
-          s=re.sub(r'(\n    Release:\n)', r'\1', s)
-          open('project.yml','w').write(s)
-          EOF
-          fi
-          xcodegen generate
+        run: xcodegen generate
       - name: Build
         run: |
           set -o pipefail
@@ -48,7 +42,7 @@ jobs:
             -skipPackagePluginValidation -skipMacroValidation $SIGNING $EXTRA | tee build.log | grep -E 'error:|warning: .*Zigzag/|BUILD ' || true
           grep -q '\*\* BUILD SUCCEEDED \*\*' build.log
       - name: Test
-        if: env.CONFIG == 'Debug'
+        if: env.CONFIG == 'Debug' && env.EXTRA == ''
         run: |
           set -o pipefail
           TEST_RUNNER_ZIGZAG_TEST_VAULT=memory xcodebuild test -project Zigzag.xcodeproj -scheme Zigzag -configuration Debug \

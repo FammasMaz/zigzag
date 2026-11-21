@@ -17,6 +17,7 @@ Zigzag 的每个版本，最新的在最上面。App 会显示你正在用的版
 - 阅读器多了“空间”颜色：文章用你所在空间的颜色，和边栏同一个颜色，空间是浅色就浅、深色就深，文字和链接的对比度保证读起来轻松。切换空间或改空间颜色时会马上跟着变。([#455](https://github.com/ZigaoWang/zigzag/issues/455))
 
 ### 修复
+- 在 GitHub（已登录）这类较重的网页上，120 Hz 屏幕的滚动流畅了。从 0.9.3 beta 4 起，网页被设成每秒最多画 120 次；较重的网页来不及每 8 毫秒画完一次，滚动就在每秒 60 步和 120 步之间来回跳，看起来一顿一顿的，轻的网页则跟得上。现在网页按 WebKit 和 Safari 的方式绘制，稳定在每秒 60 次，滚动本身照样按屏幕的完整刷新率移动，在同一个网页上实测流畅。想换回完整的绘制速率，可以在“设置 › 开发者 › 功能标志”里关掉 Prefer Page Rendering Updates near 60fps。([#394](https://github.com/ZigaoWang/zigzag/issues/394))
 - 在 Chrome 网上应用店的主题页面上点提示栏的“添加”，现在只会显示一行说明 Zigzag 不使用浏览器主题，也不再出现“重试”按钮，因为重试也只会得到同样的结果。感谢 [Lakeland97](https://github.com/Lakeland97)。([#454](https://github.com/ZigaoWang/zigzag/issues/454))
 - 在 Peek 里点了链接之后可以退回去了。Peek 打开过别的页面后，顶部会出现后退和前进按钮，⌘[、⌘] 和双指轻扫也跟在标签页里一样能用。按 Esc 还是直接关掉整个 Peek。感谢 [Lakeland97](https://github.com/Lakeland97)。([#463](https://github.com/ZigaoWang/zigzag/issues/463))
 - 翻译很长的网页不会再在 45 秒后放弃了。屏幕上看得到的部分先翻，翻好一段就换上一段，提示里会显示翻到多少了；只有连续 45 秒什么都没翻出来才会报错。感谢 [orisred](https://github.com/orisred)。([#465](https://github.com/ZigaoWang/zigzag/issues/465))

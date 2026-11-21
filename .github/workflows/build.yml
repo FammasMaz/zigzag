@@ -18,6 +18,7 @@ jobs:
     timeout-minutes: 90
     env:
       CONFIG: ${{ inputs.configuration || 'Debug' }}
+      EXTRA: ${{ inputs.extra || '' }}
       # Unsigned: the runner has no Apple Development identity. The in-memory vault keeps tests out of the keychain.
       SIGNING: CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM= PROVISIONING_PROFILE_SPECIFIER=
     steps:
@@ -44,7 +45,7 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild build -project Zigzag.xcodeproj -scheme Zigzag -configuration $CONFIG -derivedDataPath build/dev \
-            -skipPackagePluginValidation -skipMacroValidation $SIGNING | tee build.log | grep -E 'error:|warning: .*Zigzag/|BUILD ' || true
+            -skipPackagePluginValidation -skipMacroValidation $SIGNING $EXTRA | tee build.log | grep -E 'error:|warning: .*Zigzag/|BUILD ' || true
           grep -q '\*\* BUILD SUCCEEDED \*\*' build.log
       - name: Test
         if: env.CONFIG == 'Debug'
